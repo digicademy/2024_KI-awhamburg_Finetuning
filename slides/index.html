@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Namen erkennen und klassifizieren. Fine-Tuning von Transformer-Modellen | KI-Methoden im Akademienprogramm: Potenziale und Anwendungsszenarien</title>
+
+    <!-- meta information -->
+    <meta name="author" content="Patrick D. Brookshire" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <!-- favicons -->
+    <link rel="shortcut icon" href="resources/img/favicon.png" />
+    <link rel="apple-touch-icon" href="resources/img/apple-touch-icon.png" />
+
+    <!-- CSS reset and grid -->
+    <link href="vendor/normalize/normalize-4.1.1.css" rel="stylesheet" />
+    <link href="vendor/skeleton/skeleton-2.0.4.css" rel="stylesheet" />
+
+    <!-- fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,600,600italic,400italic,700italic,800,800italic&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css" />
+
+    <!-- styles for included libraries -->
+
+    <!-- highlight -->
+    <link rel="stylesheet" href="vendor/highlight/styles/default.css" />
+    <link rel="stylesheet" href="resources/css/hljs.linenumbering.css" />
+
+    <!-- magnific popup -->
+    <link rel="stylesheet" href="vendor/magnific-popup/magnific-popup-1.1.0.css" />
+
+    <!-- standard presentation styles -->
+    <link href="resources/css/style.css" rel="stylesheet" />
+
+    <!-- custom presentation styles -->
+    <link href="resources/css/custom.css" rel="stylesheet" />
+
+    <!-- js needed in head -->
+
+    <!-- html5 dataset shim for IE -->
+    <script src="vendor/impress/html5-dataset.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+    <div class="fallback-message">
+        <p>
+            Your browser <strong>doesn't support the features required</strong> by impress.mod.js,
+            so you are presented with a simplified version of this presentation.
+        </p>
+        <p>
+            For the best experience please use the latest <strong>Chrome</strong>, <strong>Safari</strong>
+            or <strong>Firefox</strong> browser.
+        </p>
+    </div>
+
+    <div id="impress">
+
+        <div class="step">
+            <h4><strong>24.09.2024</strong> | Akademie der Wissenschaften in Hamburg</h4>
+            <h4><strong>KI-Methoden im Akademienprogramm:<br/> Potenziale und Anwendungsszenarien</strong></h4>
+
+            <h1 class="down-100">Namen erkennen und klassifizieren</h1>
+
+            <h2 class="up-25">Fine-Tuning von Transformer-Modellen</h2>
+
+            <h4 class="down-100">
+                <strong>Slides:</strong>
+                <a href="#" title="View the presentation online">
+                    https://digicademy.github.io/2024_KI-awhamburg_Finetuning/slides/
+                </a>
+            </h4>
+
+            <h5>
+                <strong><a href="https://orcid.org/0000-0002-5843-7577">Patrick D. Brookshire</a></strong> |
+                <img src="resources/img/Octicons-mark-github.svg" alt="Twitter" class="gh-icon" />
+                <a href="https://github.com/digicademy/" title="Digital Academy on GitHub">digicademy</a> |
+                <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a>
+            </h5>
+        </div>
+
+        <div class="step">
+            <h2>Table of Contents</h2>
+            <ol class="line-height-one-five">
+                <li>
+                    Einführung: Transformer-Modelle
+                </li>
+                <li>
+                    Anwendung: NER
+                </li>
+                <li>
+                    Anwendung: Benennungsmotive
+                </li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h1 class="red">01</h1>
+            <h2 class="line-height-one-five">
+                Einführung:<br/>Transformer-Modelle
+            </h2>
+        </div>
+
+        <div class="step">
+            <h2>Einführung: Transformer-Modelle</h2>
+            <h3 class="up-25 after-25">Attention und BERT</h3>
+
+            <ul>
+                <li>Encoder/Decoder + "Attention Is All You Need" <a class="x-small" href="https://dl.acm.org/doi/10.5555/3295222.3295349" target="_blank">(Vaswani et al. 2017)</a><ul>
+                    <li>Task: Machine Translation (🇬🇧→🇩🇪/🇫🇷)</li>
+                </ul></li>
+                <li class="substep"><span class="smaller"><b>B</b>idirectional <b>E</b>ncoder <b>R</b>epresentations from <b>T</b>ransformers</span> <a class="x-small" href="https://aclanthology.org/N19-1423" target="_blank">(Devlin et al. 2019)</a><ul>
+                    <li>Tasks: Masked Language Modeling + Next Sentence Prediction</li>
+                </ul></li>
+                <li class="grey substep">auch Basis (generativer) LLMs</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h2>Einführung: Transformer-Modelle</h2>
+            <h3 class="up-25 after-25">Pre-Training und Fine-Tuning | Trainingsumfang</h3>
+
+            <div class="row">
+                <div class="six columns">
+                    <h4>Pre-Training</h4>
+                    <ul>
+                        <li>BERT <a class="x-small" href="https://aclanthology.org/N19-1423" target="_blank">(Devlin et al. 2019)</a>:<br/> ~12 GB</a></li>
+                        <li>gbert <a class="x-small" href="https://doi.org/10.18653/v1/2020.coling-main.598" target="_blank">(Chan et al. 2020)</a>:<br/> ~163 GB</li>
+                        <li>CamemBERT <a class="x-small" href="https://aclanthology.org/2020.acl-main.645" target="_blank">(Martin et al. 2020)</a>:<br/> ~138 GB</li>
+                        <!--li class="substep">Text-Classification-Task (~ "Kategorisierung"):<ul>
+                            <li>70.000 Modelle</li>
+                            <li>2200 Sprach(variant)en</li>
+                        </ul></li-->
+                    </ul>
+                </div>
+                <div class="six columns substep">
+                    <h4>Fine-Tuning <span class="smaller">(Bühnenanweisungstypen)</span></h4>
+                    <div class="mfp-lightbox">
+                        <a href="resources/img/Schneider_RuizFabo_2024_281_training-sizes_min.png" title="Performance in Abhängigkeit vom Trainingsumfang">
+                            <img src="resources/img/Schneider_RuizFabo_2024_281_training-sizes_min.png" />
+                        </a>
+                    </div>
+                    <div class="x-small right">Eigene Darstellung zu <a href="https://aclanthology.org/2024.latechclfl-1.28" target="_blank">Schneider & Ruiz Fabo (2024)</a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>Einführung: Transformer-Modelle</h2>
+            <h3 class="up-25 after-25"><img class="logo" src="resources/img/huggingface_logo-noborder.svg" alt="Hugging-Face-Logo"/>Hugging Face</h3>
+
+            <div class="row">
+                <div class="six columns">
+                    <h4>Plattform für <a href="https://huggingface.co/models" target="_blank">Transformer</a></h4>
+                    <ul>
+                        <li>~1 Mio. Modelle</a></li>
+                        <li>~50 Tasks</li>
+                        <li>~5.000 Sprach(variant)en</li>
+                        <!--li class="substep">Text-Classification-Task (~ "Kategorisierung"):<ul>
+                            <li>70.000 Modelle</li>
+                            <li>2200 Sprach(variant)en</li>
+                        </ul></li-->
+                    </ul>
+                </div>
+                <div class="six columns substep">
+                    <h4>Python-Modul <a href="https: //huggingface.co/transformers/" target="_blank"><code>transformers</code></a></h4>
+                    <ul>
+                        <li>Pre-/Postprocessing</li>
+                        <li>Pre-Training/Fine-Tuning</li>
+                        <li>Anwendung</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h1 class="red">02</h1>
+            <h2 class="line-height-one-five">
+                Anwendung: NER
+            </h2>
+        </div>
+
+        <div class="step">
+            <h2>Anwendung: NER</h2>
+            <h3 class="up-25 after-25">Einführung</h3>
+
+            <ul>
+                <li><b>N</b>amed <b>E</b>ntity <b>R</b>ecognition: <b>Token-Classification</b>-Task</li>
+                <li>11 Texte aus Textarchiv (<b>M</b>ittelhochdeutsches <b>W</b>örter<b>B</b>uch) <ul class="x-small"><li>Er, 
+                    Parz,
+                    RvEBarl,
+                    SüklZw,
+                    SuTheol,
+                    UvZLanz,
+                    VAlex,
+                    Vateruns,
+                    VEzzo,
+                    Wh,
+                    Wig</li></ul></li>
+                <li>Datenformat: TSV + IOB-Schema <span class="x-small">(Ramshaw &amp; Marcus 1995)</span>
+                    <table class="x-small substep">
+                        <thead>
+                            <tr>
+                                <th>tokens</th>
+                                <th>labels</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text">['hinderz', 'ors', 'ûf', 'dez', 'gras.', 'vil', 'ungewent', 'er', 'des', 'was.', 'Er', 'reit', 'ûf', 'in', 'und', 'trat', 'in', 'nider.', 'des', 'erholt', 'er']</td>
+                                <td class="text">['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']</td>
+                            </tr>
+                            <tr>
+                                <td class="text">['ir', 'selbe', 'hât', 'gehôrt.', 'nu', 'seht', 'wâ', 'in', 'brâhte', 'dort', <b>'Antikonî'</b>, 'diu', 'wol', 'gevar:', 'ir', 'vetern', 'sun', 'kom', 'mit', 'ir', 'dar,']</td>
+                                <td class="text">['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', <b>'B'</b>, 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h2>Anwendung: NER</h2>
+            <h3 class="up-25 after-25">Fine-Tuning</h3>
+
+            <ul>
+                <li>Basis-Modell: <a href="https://huggingface.co/deepset/gbert-base">deepset/gbert-base</a></li>
+                <li>Datenset: 3000 Spans (2400 train/600 test)</li>
+                <li>Trainingsparameter: <ul>
+                    <li>Epochen: 3</li>
+                    <!--li>Evaluationsmetriken: "precision", "recall", "f1", "accuracy"</li>
+                    <li>Evaluationsstragie: "epoch"</li-->
+                    <li class="grey">Random Seed: 0</li>
+                    <li>sonst Standardwerte</li>
+                </ul></li>
+                <li>Dauer: 2min (GPU)</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h2>Anwendung: NER</h2>
+            <h3 class="up-25 after-25">Performance</h3>
+
+            <ul>
+                <li>Anwendung auf Testdatenset</li>
+            </ul>
+
+            <table class="x-small">
+                <thead>
+                    <tr>
+                        <th>Modell</th>
+                        <th>Accuracy</th>
+                        <!--th>Precision</th>
+                        <th>Recall</th-->
+                        <th>F1 (makro)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Majority Baseline (= keine Entitäten)</th>
+                        <td class="red">0,93</td>
+                        <!--td class="red">0,00</td>
+                        <td class="red">0,00</td-->
+                        <td class="red">0,48</td>
+                    </tr>
+                    <tr>
+                        <th>stanza (<a class="x-small" href="https://nlp.stanford.edu/pubs/qi2020stanza.pdf" target="_blank">Qi et al. 2020</a>)</th>
+                        <td>0,94</td>
+                        <!--td>0,87</td>
+                        <td>0,19</td-->
+                        <td>0,64</td>
+                    </tr>
+                    <tr>
+                        <th>Fine-Tuning (<a href="https://huggingface.co/deepset/gbert-base" target="_blank">deepset/gbert-base</a>)</th>
+                        <td class="green">0,99</td>
+                        <!--td class="green">0,96</td>
+                        <td class="green">0,96</td-->
+                        <td class="green">0,98</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="step">
+            <h1 class="red">03</h1>
+            <h2 class="line-height-one-five">
+                Anwendung: Benennungsmotive
+            </h2>
+        </div>
+
+        <div class="step">
+            <h2>Anwendung: Benennungsmotive</h2>
+            <h3 class="up-25 after-25">Einführung</h3>
+
+            <ul>
+                <li>in <b>D</b>igitalem <b>F</b>amiliennamenwörterbuch <b>D</b>eutschlands jedem Namen <i>1-n</i> Benennungsmotive zugewiesen</li>
+                <li>Kategorisierung: <b>Text-Classification</b>-Task</li>
+                <li>Datenformat: TSV
+                    <table class="x-small substep">
+                        <thead>
+                            <tr>
+                                <th>text</th>
+                                <th>label</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text">Ackerman</td>
+                                <td class="text">Beruf</td>
+                            </tr>
+                            <tr>
+                                <td class="text">Guggenbühler</td>
+                                <td class="text">Herkunft</td>
+                            </tr>
+                            <tr>
+                                <td class="text">Kocatürk</td>
+                                <td class="text">Kompositionelles Motiv</td>
+                            </tr>
+                            <tr>
+                                <td class="text">Reiprecht</td>
+                                <td class="text">Rufname</td>
+                            </tr>
+                            <tr>
+                                <td class="text">Gök</td>
+                                <td class="text">Rufnamenmuster</td>
+                            </tr>
+                            <tr>
+                                <td class="text">Taenzel</td>
+                                <td class="text">Übername</td>
+                            </tr>
+                            <tr>
+                                <td class="text">Groeneveld</td>
+                                <td class="text">Wohnstätte</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </li>
+            </ul>
+        </div>
+
+        <!--div class="step">
+            <h2>Anwendung: Benennungsmotive</h2>
+            <h3 class="up-25 after-25">Datengrundlage</h3>
+
+            <table class="x-small">
+                <thead>
+                    <tr>
+                        <th>Benennungsmotiv</th>
+                        <th>DFD</th>
+                        <th>Sample</th>
+                        <th>Trainingsdaten</th>
+                        <th>Testdaten</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Beruf</th>
+                        <td>21.087</td>
+                        <td>400</td>
+                        <td>316</td>
+                        <td>84</td>
+                    </tr>
+                    <tr>
+                        <th>Herkunft</th>
+                        <td>10.200</td>
+                        <td>400</td>
+                        <td>322</td>
+                        <td>78</td>
+                    </tr>
+                    <tr>
+                        <th>Kompositionelles Motiv</th>
+                        <td>646</td>
+                        <td>400</td>
+                        <td>314</td>
+                        <td>86</td>
+                    </tr>
+                    <tr class="grey">
+                        <th>Patriotisches Motiv</th>
+                        <td>79</td>
+                        <td>–</td>
+                        <td>–</td>
+                        <td>–</td>
+                    </tr>
+                    <tr class="grey">
+                        <th>Religiöses Motiv</th>
+                        <td>79</td>
+                        <td>–</td>
+                        <td>–</td>
+                        <td>–</td>
+                    </tr>
+                    <tr>
+                        <th>Rufname</th>
+                        <td class="green">28.036</td>
+                        <td>400</td>
+                        <td>323</td>
+                        <td>77</td>
+                    </tr>
+                    <tr>
+                        <th>Rufnamenmuster</th>
+                        <td>731</td>
+                        <td>400</td>
+                        <td>320</td>
+                        <td>80</td>
+                    </tr>
+                    <tr>
+                        <th>Übername</th>
+                        <td>14.288</td>
+                        <td>400</td>
+                        <td class="green">339</td>
+                        <td>61</td>
+                    </tr>
+                    <tr class="separator-after">
+                        <th>Wohnstätte</th>
+                        <td>12.038</td>
+                        <td>400</td>
+                        <td>306</td>
+                        <td class="green">94</td>
+                    </tr>
+                    <tr>
+                        <th>Gesamt</th>
+                        <td>87.130</td>
+                        <td>2800</td>
+                        <td>2240</td>
+                        <td>560</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div-->
+
+        <div class="step">
+            <h2>Anwendung: Benennungsmotive</h2>
+            <h3 class="up-25 after-25">Fine-Tuning</h3>
+
+            <ul>
+                <li>Basis-Modell: <a href="https://huggingface.co/deepset/gbert-base">deepset/gbert-base</a></li>
+                <li>Datenset: 2800 Familiennamen (2240 train/560 test)</li>
+                <li>Trainingsparameter: <ul>
+                    <li>Epochen: 5</li>
+                    <!--li>Evaluationsmetrik: "accuracy"</li>
+                    <li>Evaluationsstragie: "epoch"</li-->
+                    <li class="grey">Random Seed: 0</li>
+                    <li>sonst Standardwerte</li>
+                </ul></li>
+                <li>Dauer: 19min (GPU)</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h2>Anwendung: Benennungsmotive</h2>
+            <h3 class="up-25 after-25">Beispiel: Hamburger</h3>
+
+            <div class="row">
+                <div class="six columns">
+                    <h4>Klassifikationsergebnisse</h4>
+                    <ul>
+                        <li>Übername (37,4%)</li>
+                        <li>Beruf (26,4%)</li>
+                        <li>Wohnstätte (26,0%)</li>
+                    </ul>
+                </div>
+
+                <div class="six columns substep">
+                    <div class="mfp-lightbox">
+                        <a href="resources/img/dfd_etymology_Hamburger.png" title="Hamburger | Etymologie (DFD)">
+                            <img src="resources/img/dfd_etymology_Hamburger.png" />
+                        </a>
+                    </div>
+                    <div class="x-small right"><a href="http://www.namenforschung.net/id/name/6517/1" target="_blank">http://www.namenforschung.net/id/name/6517/1</a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>Anwendung: Benennungsmotive</h2>
+            <h3 class="up-25 after-25">Performance</h3>
+
+            <ul>
+                <li>Anwendung auf Testdatenset (560)</li>
+                <li>Dauer: ~30s (CPU!)
+                    <ul class="grey substep">
+                        <li>Zeroshot ~12,5min </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <table class="x-small substep">
+                <thead>
+                    <tr>
+                        <th>Modell</th>
+                        <th>Accuracy</th>
+                        <!--th>Precision</th>
+                        <th>Recall</th-->
+                        <th>F1 (makro)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Random Baseline</th>
+                        <td>0,17</td>
+                        <!--td>0,17</td>
+                        <td>0,17</td-->
+                        <td>0,17</td>
+                    </tr>
+                    <tr>
+                        <th>Majority Baseline ("Übername")</th>
+                        <td class="red">0,11</td>
+                        <!--td class="red">0,02</td>
+                        <td class="red">0,14</td-->
+                        <td class="red">0,03</td>
+                    </tr>
+                    <tr>
+                        <th>Zero-Shot (<a href="https://huggingface.co/MoritzLaurer/mDeBERTa-v3-base-mnli-xnli">MoritzLaurer/mDeBERTa-v3-base-mnli-xnli</a>)</th>
+                        <td>0,14</td>
+                        <!--td>0,12</td>
+                        <td class="red">0,14</td-->
+                        <td>0,10</td>
+                    </tr>
+                    <tr>
+                        <th>Fine-Tuning (<a href="https://huggingface.co/deepset/gbert-base">deepset/gbert-base</a>)</th>
+                        <td class="green">0,86</td>
+                        <td class="green">0,86</td>
+                        <!--td class="green">0,87</td>
+                        <td class="green">0,86</td-->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="step">
+            <h2>Anwendung: Benennungsmotive</h2>
+            <h3 class="up-25 after-25">Performance | Konfusionsmatrix</h3>
+            <div class="row">
+                <div class="six columns">
+                    <h4>Fine-Tuning</h4>
+                    <div class="mfp-lightbox ten columns">
+                        <a href="resources/img/dfd-motives_predicted_confusion-matrix.png" title="Konfusionsmatrix gbert*">
+                            <img src="resources/img/dfd-motives_predicted_confusion-matrix.png" />
+                        </a>
+                    </div>
+                    <ul class="substep">
+                        <li>häufigste Verwechslung: <i class="x-small">Kompositionelles Motiv ~ Rufnamenmuster</i></li>
+                    </ul>
+                </div>
+                <div class="six columns">
+                    <h4>Zero-Shot</h4>
+                    <div class="mfp-lightbox ten columns">
+                        <a href="resources/img/dfd-motives_zero-shot_predicted_confusion-matrix.png" title="Konfusionsmatrix gbert*">
+                            <img src="resources/img/dfd-motives_zero-shot_predicted_confusion-matrix.png" />
+                        </a>
+                    </div>
+                    <ul class="substep">
+                        <li>tendiert zu <i class="">Rufnamenmuster</i></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>Wrapup</h2>
+            <h3 class="up-25 after-25">Fine-Tuning von Transformer-Modellen</h3>
+
+            <ul>
+                <li>Transformer seit 2018 in CL/NLP "State-of-the-Art"</li>
+                <li class="substep">Fine-Tuning auf beliebige Tasks möglich - z.B. <ul>
+                    <li>NER (Token Classification)</li>
+                    <li>Kategorisierung (Text Classification)</li></ul>
+                </li>
+                <li class="substep">Fine-Tuning ab ~2000 Datensätzen: akzeptable Performance
+                    <ul>
+                        <li>GPU nur beim Fine-Tuning nötig</li>
+                        <li>Anwendung auf CPU möglich</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Namen erkennen => NER (Token Classification)-->
+
+        <div class="step">
+            <div class="centered">
+                <h1>F I N I S</h1>
+                <h2>Thank you</h2>
+            </div>
+        </div>
+
+        <div class="step">
+
+            <h2>Literature &amp; Software</h2>
+
+            <h4>Literature</h4>
+
+            <ul class="small">
+                <li>Brookshire, Patrick D. u. Jonas Richter. 2025 (vrsl.). Im Netz mittelhochdeutscher Wörter:
+                    Das ‚Mittelhochdeutsche Wörterbuch‘ und seine Quellen. In: Das Mittelalter. Bd. 30 Nr. 1.</li>
+                <li>Chan, Branden, Stefan Schweter u. Timo Möller. 2020.
+                    <a href="https://doi.org/10.18653/v1/2020.coling-main.598" target="_blank">German’s Next Language Model.</a> In: <i>Proceedings of the 28th COLING</i>, S. 6788–6796.</li>
+                <li>Devlin, Jacob et al. 2019. <a href="https://aclanthology.org/N19-1423" target="_blank">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding.</a> In: <i>Proceedings of the 2019 NAACL-HLT</i>, S. 4171–4186.</li>
+                <li>Martin, Louis et al. 2020.
+                    <a href="https://aclanthology.org/2020.acl-main.645" target="_blank">CamemBERT: a Tasty French Language Model.</a> In: <i>Proceedings of the 58th Annual Meeting of the ACL</i>, S. 7203–7219.</li>
+                <li>Qi, Peng u. a. 2020. <a href="https://nlp.stanford.edu/pubs/qi2020stanza.pdf" target="_blank">Stanza: A Python
+                    Natural Language Processing Toolkit for Many Human Languages.</a> In: <i>Proceedings of the 58th Annual
+                    Meeting of the ACL: System Demonstrations.</i></li>
+                <li>Ramshaw, Lance A. u. Mitchell P. Marcus. 1995. Text Chunking Using Transformation-Based
+                    Learning. In: Proceedings of the Third ACL Workshop on Very Large Corpora, S. 82–94</li>
+                <li>Schneider, Alexia u. Pablo Ruiz Fabo. 2024. <a href="https://aclanthology.org/2024.latechclfl-1.28" target="_blank">Stage Direction Classification in French Theater: Transfer Learning Experiments.</a> In: <i>Proceedings of the 8th LaTeCH-CLfL</i>, S. 278–286.</li>
+                <li>Vaswani, Ashish et al. 2017. <a href="https://dl.acm.org/doi/10.5555/3295222.3295349" target="_blank">Attention Is All You Need.</a> In: <i>Proceedings of the 31st NIPS</i>, S. 6000–6010.</li>
+                <li>Wolf, Thomas et al. 2020. <a href="https://aclanthology.org/2020.emnlp-demos.6" target="_blank">Transformers: State-of-the-Art Natural Language Processing.</a> In: <i>Proceedings of the 2020 EMNLP: System Demonstrations</i>, S. 38–45.</li>
+            </ul>
+
+            <h4>Software</h4>
+
+            <ul class="small">
+                <li><a href="https://huggingface.co/docs/transformers" target="_blank">https://huggingface.co/docs/transformers</a></li>
+                <li><a href="https://jupyter.org/" target="_blank">https://jupyter.org/</a></li>
+                <li><a href="https://www.python.org/" target="_blank">https://www.python.org/</a></li>
+            </ul>
+
+            <!--h4>Download</h4>
+            <ul class="small">
+                <li>
+                    <a href="#">
+                        Link to presentation
+                    </a>
+                </li>
+                <li>
+                    License: <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a>, Author
+                </li>
+            </ul-->
+        </div>
+
+    </div>
+
+    <!-- jquery -->
+    <script src="vendor/jquery/jquery-1.11.0.min.js"></script>
+
+    <!-- magnific popup -->
+    <script src="vendor/magnific-popup/jquery.magnific-popup.min-1.1.0.js"></script>
+    <script src="resources/js/magnific-popup.lightbox.js"></script>
+
+    <!-- impress.mod.js -->
+    <script src="vendor/impress/impress.fork.js"></script>
+    <script src="vendor/impress/impress-slidenum.js"></script>
+    <script>
+        var obj = impress();
+        obj.init();
+        initSlideNo(obj);
+    </script>
+
+</body>
+</html>
